@@ -1,8 +1,7 @@
-// src/auth/jwt.strategy.ts
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { UserService } from '../user/user.service';
+import { UserService } from 'src/user/user.service';
 import { jwtConstants } from './constants';
 import { JwtPayload } from './jwt-payload.interface';
 
@@ -12,7 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: jwtConstants.secret, // Замените на ваш секретный ключ
+      secretOrKey: jwtConstants.secret,
     });
   }
 
@@ -21,6 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return user;
+    return { userId: user.id, email: user.email };
   }
 }

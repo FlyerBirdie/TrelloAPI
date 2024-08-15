@@ -1,11 +1,17 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// import { Column } from './column/column.entity';
-// import { Card } from './card/card.entity';
-// import { Comment } from './comment/comment.entity';
 import { User } from './user/entities/user.entity/user.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { ColumnModule } from './column/column.module';
+import { CardModule } from './card/card.module';
+import { CommentModule } from './comment/comment.module';
+import { Card } from './card/entities/card.entity';
+import { ColumnEntity } from './column/entities/column.entity';
+import { Comment } from './comment/entities/comment.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthorizationService } from './authorization/authorization.service';
+import { AuthorizationModule } from './authorization/authorization.module';
 
 @Module({
   imports: [
@@ -16,14 +22,18 @@ import { AuthModule } from './auth/auth.module';
       username: 'postgres',
       password: '141101',
       database: 'trello',
-      entities: [User],//, Column, Card, Comment],
+      entities: [User, ColumnEntity, Card, Comment],
       synchronize: true,
     }),
     UserModule,
     AuthModule,
-    TypeOrmModule.forFeature([User]), //, Column, Card, Comment]),
+    ColumnModule,
+    CardModule,
+    CommentModule,
+    TypeOrmModule.forFeature([User, ColumnEntity, Card, Comment, AuthGuard]),
+    AuthorizationModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [AuthorizationService],
 })
 export class AppModule {}
