@@ -1,0 +1,33 @@
+// Define the tables and their relationships using DBML
+
+Table users {
+  id integer [primary key]
+  email varchar [unique, not null]
+  password varchar [not null]
+  name varchar [not null]
+}
+
+Table columns {
+  id integer [primary key]
+  title varchar [not null]
+  user_id integer [not null]
+}
+
+Table cards {
+  id integer [primary key]
+  title varchar [not null]
+  description text
+  column_id integer [not null]
+}
+
+Table comments {
+  id integer [primary key]
+  text text [not null]
+  card_id integer [not null]
+}
+
+// Define the relationships between tables
+
+Ref: columns.user_id > users.id // Many-to-one relationship between columns and users
+Ref: cards.column_id > columns.id // Many-to-one relationship between cards and columns
+Ref: comments.card_id > cards.id // Many-to-one relationship between comments and cards
